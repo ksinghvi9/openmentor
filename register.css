@@ -1,0 +1,65 @@
+body {
+  background: #f6f8fa;
+  color: #3066be;
+}
+
+.register-form {
+  background: #fff;
+  border-radius: 24px;
+  padding: 30px;
+  max-width: 500px;
+  margin: 2rem auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.skills-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.skill-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.skill-checkbox:hover {
+  background-color: #f5f5f5;
+  border-color: #3066be;
+}
+
+.skill-checkbox input[type="checkbox"] {
+  margin: 0;
+  accent-color: #3066be;
+}
+
+#mentor-skills-section {
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+#experience, #github {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+#experience:focus, #github:focus {
+  outline: none;
+  border-color: #3066be;
+  box-shadow: 0 0 0 2px rgba(48, 102, 190, 0.2);
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+    <link rel="stylesheet" href="login.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRQBr3iR9oUkZNOVh_k9aP2xQxMo0oKYo",
+            authDomain: "elevate-baeb7.firebaseapp.com",
+            projectId: "elevate-baeb7",
+            storageBucket: "elevate-baeb7.firebasestorage.app",
+            messagingSenderId: "586172962469",
+            appId: "1:586172962469:web:26f9784f2050b96cbfdf4c"
+        };
+        
+        // Initialize Firebase if not already initialized
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        
+        // Check if user is already logged in
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                const role = new URLSearchParams(window.location.search).get('role');
+                const dashboardUrl = role === 'mentor' ? 'mentor-dashboard.html' : 'mentee-dashboard.html';
+                window.location.href = dashboardUrl;
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1 id="page-title">Log In</h1>
+        <p class="role-display">Logging in as: <strong id="role-display">Loading...</strong></p>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            
+            <button type="submit">Log In</button>
+            <p id="error-message" class="error"></p>
+        </form>
+
+        <div class="footer-link">
+            <p>New user? <a href="register.html">Register</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Get elements
+        const loginForm = document.getElementById('login-form');
+        const roleDisplay = document.getElementById('role-display');
+        const errorMessage = document.getElementById('error-message');
+
+        // --- Get Role from URL Query Parameter ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const role = urlParams.get('role'); // Expects ?role=mentor or ?role=mentee
+
+        if (role && (role === 'mentor' || role === 'mentee')) {
+            roleDisplay.textContent = role.toUpperCase();
+        } else {
+            roleDisplay.textContent = 'User (Role not specified in URL)';
+        }
+
+        // --- Firebase Login Logic ---
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMessage.textContent = ''; // Clear previous errors
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                // Log in user with Firebase Auth
+                await auth.signInWithEmailAndPassword(email, password);
+                console.log('Login successful! Redirecting...');
+                
+                // Get user role from Firestore
+                const user = auth.currentUser;
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                const userRole = userDoc.exists ? userDoc.data().role : role;
+                
+                // Redirect to appropriate dashboard
+                const dashboardUrl = userRole === 'mentor' ? 'mentor-dashboard.html' : 'mentee-dashboard.html';
+                window.location.href = dashboardUrl;
+
+            } catch (error) {
+                console.error('Login Error:', error);
+                // Display user-friendly error message
+                let userMessage = 'Login failed. Please check your email and password.';
+                if (error.code === 'auth/user-not-found') {
+                    userMessage = 'No user found with this email.';
+                } else if (error.code === 'auth/wrong-password') {
+                    userMessage = 'Incorrect password.';
+                }
+                errorMessage.textContent = userMessage;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="register.css">
+    
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRQBr3iR9oUkZNOVh_k9aP2xQxMo0oKYo",
+            authDomain: "elevate-baeb7.firebaseapp.com",
+            projectId: "elevate-baeb7",
+            storageBucket: "elevate-baeb7.firebasestorage.app",
+            messagingSenderId: "586172962469",
+            appId: "1:586172962469:web:26f9784f2050b96cbfdf4c"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Register</h1>
+
+        <form id="register-form">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required minlength="6">
+            </div>
+                        <div class="form-group">
+                <label for="role">Role</label>
+                <select id="role" required onchange="toggleSkillsSection()">
+                    <option value="">Select Role</option>
+                    <option value="mentor">Mentor</option>
+                    <option value="mentee">Mentee</option>
+                </select>
+            </div>
+
+            <div id="mentor-skills-section" style="display: none;">
+                <div class="form-group">
+                    <label for="skills">Skills (select all that apply)</label>
+                    <div class="skills-container">
+                        <div class="skills-grid">
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="React"> React
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="JavaScript"> JavaScript
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="TypeScript"> TypeScript
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="Node.js"> Node.js
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="Python"> Python
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="Git"> Git
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="DevOps"> DevOps
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="AWS"> AWS
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="Docker"> Docker
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="Frontend Development"> Frontend Development
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="Backend Development"> Backend Development
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="Database"> Database
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="Testing"> Testing
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="CI/CD"> CI/CD
+                            </label>
+                            <label class="skill-checkbox">
+                                <input type="checkbox" name="skills" value="Open Source"> Open Source
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="experience">Years of Experience</label>
+                    <input type="number" id="experience" min="0" step="1">
+                </div>
+                <div class="form-group">
+                    <label for="github">GitHub Profile URL</label>
+                    <input type="url" id="github" placeholder="https://github.com/yourusername">
+                </div>
+            </div>
+            
+            <button type="submit">Register</button>
+            <p id="error-message" class="error"></p>
+        </form>
+
+        <div class="footer-link">
+            <p>Already have an account? <a href="login.html">Log In</a></p>
+        </div>
+    </div>
+
+    <script>
+        function toggleSkillsSection() {
+            const role = document.getElementById('role').value;
+            const mentorSkillsSection = document.getElementById('mentor-skills-section');
+            mentorSkillsSection.style.display = role === 'mentor' ? 'block' : 'none';
+        }
+
+        // Get elements
+        const registerForm = document.getElementById('register-form');
+        const errorMessage = document.getElementById('error-message');
+
+        // --- Firebase Registration Logic ---
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMessage.textContent = ''; // Clear previous errors
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+
+            if (password.length < 6) {
+                errorMessage.textContent = 'Password must be at least 6 characters long.';
+                return;
+            }
+
+            try {
+                // 1. Create user with Firebase Auth (Email/Password)
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // 2. Prepare user data
+                const userData = {
+                    name: name,
+                    email: email,
+                    role: role,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                // Add skills data for mentors
+                if (role === 'mentor') {
+                    const skillsCheckboxes = document.querySelectorAll('input[name="skills"]:checked');
+                    const skills = Array.from(skillsCheckboxes).map(cb => cb.value);
+                    const experience = document.getElementById('experience').value;
+                    const github = document.getElementById('github').value;
+                    
+                    if (skills.length === 0) {
+                        errorMessage.textContent = 'Please select at least one skill.';
+                        return;
+                    }
+
+                    if (!github) {
+                        errorMessage.textContent = 'Please provide your GitHub profile URL.';
+                        return;
+                    }
+                    
+                    userData.skills = skills;
+                    userData.experience = parseInt(experience) || 0;
+                    userData.github = github;
+                    userData.verified = false;
+                    userData.helpedCount = 0;
+                    userData.rating = 0;
+                    userData.subject = skills.join(', ');
+                }
+
+                // Save user data to Firestore
+                await db.collection("users").doc(user.uid).set(userData);
+
+                console.log('Registration successful! User ID:', user.uid, 'Role:', role);
+                // 3. Redirect to appropriate dashboard
+                window.location.href = role === 'mentor' ? 'mentor-dashboard.html' : 'mentee-dashboard.html';
+
+            } catch (error) {
+                console.error('Registration Error:', error);
+                // Display user-friendly error message
+                let userMessage = 'Registration failed.';
+                if (error.code === 'auth/email-already-in-use') {
+                    userMessage = 'This email is already registered. Try logging in.';
+                } else if (error.code === 'auth/invalid-email') {
+                    userMessage = 'The email address is not valid.';
+                }
+                errorMessage.textContent = userMessage;
+            }
+        });
+    </script>
+</body>
+</html>

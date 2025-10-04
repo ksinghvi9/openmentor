@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Dashboard</title>
+    <link rel="stylesheet" href="dashboard_style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Welcome, Mentor! <span id="mentor-name"></span></h1>
+        
+        <div class="grid-container" id="mentee-grid">
+            </div>
+
+        <p style="margin-top: 30px; text-align: center; color: var(--secondary-color);">
+            You've helped <strong id="helped-count">0</strong> students. 
+            <span id="verified-status"></span>
+        </p>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRQBr3iR9oUkZNOVh_k9aP2xQxMo0oKYo",
+            authDomain: "elevate-baeb7.firebaseapp.com",
+            projectId: "elevate-baeb7",
+            storageBucket: "elevate-baeb7.firebasestorage.app",
+            messagingSenderId: "586172962469",
+            appId: "1:586172962469:web:26f9784f2050b96cbfdf4c"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+    </script>
+    <script src="data.js"></script> 
+    <script src="mentor_dashboard.js"></script> 
+</body>
+</html>

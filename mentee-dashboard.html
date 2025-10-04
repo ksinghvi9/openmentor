@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentee Dashboard</title>
+    <link rel="stylesheet" href="dashboard_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Welcome, Mentee!</h1>
+            <button onclick="firebase.auth().signOut().then(() => window.location.href = 'index.html')" 
+                    class="btn btn-primary">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+
+        <div class="search-container">
+            <div class="search-input-group">
+                <input type="text" id="problem-search" placeholder="Enter subject/problem or mentor name..." list="group-suggestions">
+                <button><i class="fas fa-search"></i> Search</button>
+            </div>
+            <div class="skills-filter">
+                <h4>Filter by Skills:</h4>
+                <div class="skill-tags">
+                    <label class="skill-tag">
+                        <input type="checkbox" name="skill-filter" value="React"> React
+                    </label>
+                    <label class="skill-tag">
+                        <input type="checkbox" name="skill-filter" value="JavaScript"> JavaScript
+                    </label>
+                    <label class="skill-tag">
+                        <input type="checkbox" name="skill-filter" value="Python"> Python
+                    </label>
+                    <label class="skill-tag">
+                        <input type="checkbox" name="skill-filter" value="Git"> Git
+                    </label>
+                    <label class="skill-tag">
+                        <input type="checkbox" name="skill-filter" value="DevOps"> DevOps
+                    </label>
+                    <label class="skill-tag">
+                        <input type="checkbox" name="skill-filter" value="Frontend"> Frontend
+                    </label>
+                    <label class="skill-tag">
+                        <input type="checkbox" name="skill-filter" value="Backend"> Backend
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div id="group-suggestion-area" style="margin-bottom: 30px;">
+        </div>
+
+        <div class="ai-chat-box">
+            <h3><i class="fas fa-robot"></i> Instant AI Helper</h3>
+            <p>Stuck on an open-source problem? Get instant guidance here.</p>
+            <button class="btn btn-primary"><i class="fas fa-comment-dots"></i> Launch AI Chat</button>
+        </div>
+
+        <h2 style="margin-top: 40px;">Suggested Mentor Videos</h2>
+        <div class="grid-container" id="video-grid">
+            </div>
+
+        <h2 style="margin-top: 40px;">Top Mentors</h2>
+        <div class="grid-container" id="mentor-grid">
+            </div>
+        
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRQBr3iR9oUkZNOVh_k9aP2xQxMo0oKYo",
+            authDomain: "elevate-baeb7.firebaseapp.com",
+            projectId: "elevate-baeb7",
+            storageBucket: "elevate-baeb7.firebasestorage.app",
+            messagingSenderId: "586172962469",
+            appId: "1:586172962469:web:26f9784f2050b96cbfdf4c"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+    </script>
+    <script src="data.js"></script>
+    <script src="mentee_dashboard.js"></script>
+</body>
+</html>
