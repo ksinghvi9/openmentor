@@ -9,15 +9,91 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <h1>Welcome, Mentor! <span id="mentor-name"></span></h1>
-        
-        <div class="grid-container" id="mentee-grid">
+        <!-- Welcome Section with Quick Actions -->
+        <div class="welcome-section">
+            <div class="welcome-header">
+                <h1>Welcome, <span id="mentor-name"></span>! <span id="verified-status"></span></h1>
+                <div class="quick-actions">
+                    <button class="action-btn"><i class="fas fa-calendar-plus"></i> Schedule Session</button>
+                    <button class="action-btn"><i class="fas fa-bell"></i> Notifications</button>
+                    <button class="action-btn"><i class="fas fa-cog"></i> Settings</button>
+                </div>
             </div>
+        </div>
 
-        <p style="margin-top: 30px; text-align: center; color: var(--secondary-color);">
-            You've helped <strong id="helped-count">0</strong> students. 
-            <span id="verified-status"></span>
-        </p>
+        <!-- Statistics Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-info">
+                    <h3>Active Mentees</h3>
+                    <p id="active-mentees">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <div class="stat-info">
+                    <h3>Hours Mentored</h3>
+                    <p id="mentored-hours">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-star"></i>
+                <div class="stat-info">
+                    <h3>Rating</h3>
+                    <p id="mentor-rating">0.0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-graduation-cap"></i>
+                <div class="stat-info">
+                    <h3>Students Helped</h3>
+                    <p id="helped-count">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mentor Profile and Progress Section -->
+        <div class="profile-progress-container">
+            <div class="mentor-profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="profile-name"></h2>
+                        <p id="specialization">Specialization: <span id="mentor-specialization"></span></p>
+                        <div class="expertise-tags" id="expertise-tags">
+                            <!-- Tags will be added dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-card">
+                <h3>Mentoring Progress</h3>
+                <div class="progress-bar">
+                    <div class="progress" id="mentoring-progress"></div>
+                </div>
+                <div class="progress-stats">
+                    <span>Monthly Goal: <strong id="monthly-goal">20</strong> sessions</span>
+                    <span>Completed: <strong id="completed-sessions">0</strong> sessions</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Sessions -->
+        <div class="sessions-container">
+            <h2><i class="fas fa-calendar"></i> Upcoming Sessions</h2>
+            <div class="sessions-grid" id="upcoming-sessions">
+                <!-- Sessions will be added dynamically -->
+            </div>
+        </div>
+
+        <!-- Mentee Grid -->
+        <h2><i class="fas fa-users"></i> Your Mentees</h2>
+        <div class="grid-container" id="mentee-grid">
+        </div>
     </div>
 
     <!-- Firebase SDKs -->
