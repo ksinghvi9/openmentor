@@ -415,6 +415,27 @@ h1 {
     overflow-y: auto;
 }
 
+.ai-message, .user-message {
+    max-width: 80%;
+    margin: 8px 0;
+    padding: 10px 15px;
+    border-radius: 15px;
+    line-height: 1.4;
+}
+
+.ai-message {
+    background: var(--background-color);
+    margin-right: auto;
+    border-bottom-left-radius: 5px;
+}
+
+.user-message {
+    background: var(--primary-color);
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 5px;
+}
+
 .ai-chat-input {
     padding: 15px;
     border-top: 1px solid var(--border-color);

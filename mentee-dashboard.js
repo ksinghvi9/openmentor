@@ -9,6 +9,68 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('problem-search');
     const groupSuggestionArea = document.getElementById('group-suggestion-area');
     const aiChatBtn = document.querySelector('.ai-chat-box button');
+
+    // Set up AI Chat button
+    aiChatBtn.addEventListener('click', () => {
+        // Create AI chat container if it doesn't exist
+        let aiChatContainer = document.querySelector('.ai-chat-container');
+        if (!aiChatContainer) {
+            aiChatContainer = document.createElement('div');
+            aiChatContainer.className = 'ai-chat-container';
+            aiChatContainer.innerHTML = `
+                <div class="ai-chat-header">
+                    <h3><i class="fas fa-robot"></i> AI Assistant</h3>
+                    <button class="close-btn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="ai-chat-messages">
+                    <p class="ai-message">Hi! I'm your AI coding assistant. How can I help you today?</p>
+                </div>
+                <div class="ai-chat-input">
+                    <input type="text" placeholder="Type your question...">
+                    <button><i class="fas fa-paper-plane"></i></button>
+                </div>
+            `;
+            document.body.appendChild(aiChatContainer);
+
+            // Set up close button
+            const closeBtn = aiChatContainer.querySelector('.close-btn');
+            closeBtn.addEventListener('click', () => {
+                aiChatContainer.remove();
+            });
+
+            // Set up message sending
+            const input = aiChatContainer.querySelector('input');
+            const sendBtn = aiChatContainer.querySelector('.ai-chat-input button');
+            const messagesContainer = aiChatContainer.querySelector('.ai-chat-messages');
+
+            function sendMessage() {
+                const message = input.value.trim();
+                if (message) {
+                    // Add user message
+                    messagesContainer.innerHTML += `
+                        <p class="user-message">${message}</p>
+                    `;
+                    input.value = '';
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                    // Simulate AI response (replace with actual AI integration)
+                    setTimeout(() => {
+                        messagesContainer.innerHTML += `
+                            <p class="ai-message">I understand you're asking about "${message}". I'm currently in development, but I'll be able to help you with coding problems soon!</p>
+                        `;
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }, 1000);
+                }
+            }
+
+            sendBtn.addEventListener('click', sendMessage);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        }
+    });
     
     let currentMentors = [];
     let currentProblems = [];
@@ -352,3 +414,5 @@ document.addEventListener('DOMContentLoaded', () => {
             timeout = setTimeout(later, wait);
         };
     }
+}}
+)

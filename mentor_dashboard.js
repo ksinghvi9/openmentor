@@ -38,51 +38,97 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Load mentor profile
             const mentorProfile = userDoc.data();
-            mentorName.textContent = mentorProfile.name || user.email;
-            helpedCountSpan.textContent = mentorProfile.helpedCount || 0;
             
+            // Update profile information
+            document.getElementById('mentor-name').textContent = mentorProfile.name || user.email;
+            document.getElementById('profile-name').textContent = mentorProfile.name || user.email;
+            document.getElementById('mentor-specialization').textContent = mentorProfile.specialization || 'General Programming';
+            document.getElementById('helped-count').textContent = mentorProfile.helpedCount || 0;
+            document.getElementById('active-mentees').textContent = mentorProfile.activeMentees || 0;
+            document.getElementById('mentored-hours').textContent = mentorProfile.mentoredHours || 0;
+            document.getElementById('mentor-rating').textContent = mentorProfile.rating || '4.5';
+            
+            // Update verification status
             if ((mentorProfile.helpedCount || 0) > 50) {
                 verifiedStatusSpan.innerHTML = `🌟 Verified Mentor! <i class="fas fa-check-circle verified-icon"></i>`;
             }
 
+            // Set up expertise tags
+            if (mentorProfile.skills && mentorProfile.skills.length > 0) {
+                const tagsContainer = document.getElementById('expertise-tags');
+                tagsContainer.innerHTML = mentorProfile.skills.map(skill => 
+                    `<span class="expertise-tag">${skill}</span>`
+                ).join('');
+            }
+
+            // Set up mentoring progress
+            const completedSessions = mentorProfile.completedSessions || 0;
+            const monthlyGoal = 20;
+            const progress = (completedSessions / monthlyGoal) * 100;
+            document.getElementById('mentoring-progress').style.width = `${Math.min(progress, 100)}%`;
+            document.getElementById('completed-sessions').textContent = completedSessions;
+
             // Initialize dashboard with real data
             loadMenteeRequests();
-        } catch (error) {
-            console.error("Error loading mentor profile:", error);
+
+            // Set up quick action buttons
+            setupQuickActionButtons(user.uid);
+    } catch (error) {
+        console.error("Error loading mentor profile:", error);
+    }
+}); // <-- End of onAuthStateChanged callback
+
+async function loadMenteeRequests() {
+    try {
+        // Get active help requests from Firestore
+        const helpRequests = await db.collection('helpRequests')
+            .where('status', '==', 'needs help')
+            .get();
+
+        const requests = {};
+        helpRequests.forEach(doc => {
+            const data = doc.data();
+            if (!requests[data.problem]) {
+                requests[data.problem] = [];
+            }
+            requests[data.problem].push({
+                id: doc.id,
+                ...data
+            });
+        });
+
+        // If no real data yet, use mock data
+        if (helpRequests.empty) {
+            generateCards(groupMenteesbyProblem(MOCK_MENTEES));
+        } else {
+            generateCards(requests);
         }
+    } catch (error) {
+        console.error("Error loading help requests:", error);
+        // Fallback to mock data
+        generateCards(groupMenteesbyProblem(MOCK_MENTEES));
+    }
+}
+
+function setupQuickActionButtons(mentorId) {
+    // Schedule Session button
+    document.querySelector('.quick-actions .action-btn:nth-child(1)').addEventListener('click', () => {
+        // TODO: Implement session scheduling
+        alert('Session scheduling feature coming soon!');
     });
 
-    async function loadMenteeRequests() {
-        try {
-            // Get active help requests from Firestore
-            const helpRequests = await db.collection('helpRequests')
-                .where('status', '==', 'needs help')
-                .get();
+    // Notifications button
+    document.querySelector('.quick-actions .action-btn:nth-child(2)').addEventListener('click', () => {
+        // TODO: Implement notifications panel
+        alert('Notifications feature coming soon!');
+    });
 
-            const requests = {};
-            helpRequests.forEach(doc => {
-                const data = doc.data();
-                if (!requests[data.problem]) {
-                    requests[data.problem] = [];
-                }
-                requests[data.problem].push({
-                    id: doc.id,
-                    ...data
-                });
-            });
-
-            // If no real data yet, use mock data
-            if (helpRequests.empty) {
-                generateCards(groupMenteesbyProblem(MOCK_MENTEES));
-            } else {
-                generateCards(requests);
-            }
-        } catch (error) {
-            console.error("Error loading help requests:", error);
-            // Fallback to mock data
-            generateCards(groupMenteesbyProblem(MOCK_MENTEES));
-        }
-    }
+    // Settings button
+    document.querySelector('.quick-actions .action-btn:nth-child(3)').addEventListener('click', () => {
+        // TODO: Implement settings panel
+        alert('Settings feature coming soon!');
+    });
+}
 
     function groupMenteesbyProblem(mentees) {
         return mentees.filter(m => m.status === 'needs help')
